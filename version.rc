@@ -1,0 +1,8 @@
+# Aciton Versioning System
+# Minor versions will be automatically incremented due to a github workflow.
+# Major versions will require a human intervention to manually increment the
+# value below.
+#
+# https://github.com/ProdigySim/action-versioning-workflow/blob/main/version.rc
+#
+0.0
