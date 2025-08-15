@@ -15,7 +15,7 @@ IFS='.' read -r major minor <<< "$version_string"
 ######################################################################
 # Script Variables
 ######################################################################
-distribution_dir="dist" # Fixed typo: distrubtion -> distribution
+distribution_dir="dist"
 executable_name="hugo_comments"
 target_entry_point="src/main.go"
 
