@@ -1,1 +1,5 @@
-.DS_Store
+# Ignores macOS system files
+*.DS_Store
+
+# Ignores build artifacts
+dist/hugo_comments_*
