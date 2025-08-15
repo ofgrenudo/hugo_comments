@@ -3,3 +3,6 @@
 
 # Ignores build artifacts
 dist/hugo_comments_*
+
+# Ignores Environment Files
+.env
