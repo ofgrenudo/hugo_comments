@@ -9,7 +9,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/hugo_comments src/main.go
+RUN go build -o /app/hugo_comments src/main.go
 
 ######################################################################
 # Stage 2: Create the minimal production image

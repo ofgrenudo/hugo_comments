@@ -13,11 +13,8 @@ services:
 
   app:
     build: .
-    environment:
-      DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}?sslmode=disable"
     depends_on:
       - db
-    restart: on-failure
 
 volumes:
   db_data:
