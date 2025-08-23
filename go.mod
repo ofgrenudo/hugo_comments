@@ -1,4 +1,4 @@
-module unorthodoxdev.net/hugo_comment
+module github.com/ofgrenudo/hugo_comment
 
 go 1.25.0
 
