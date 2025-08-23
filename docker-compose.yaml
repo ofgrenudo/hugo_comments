@@ -5,14 +5,16 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    env_file: ".env"
     volumes:
       - db_data:/var/lib/postgresql/data # Persist data
     ports:
       - "${DB_PORT}:5432"
 
   app:
-    build: .
+    build:  .
+    env_file: ".env"
     depends_on:
       - db
 

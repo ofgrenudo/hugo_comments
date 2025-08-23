@@ -9,7 +9,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN go build -o /app/hugo_comments src/main.go
+RUN go build -o ./hugo_comments ./src/
 
 ######################################################################
 # Stage 2: Create the minimal production image
