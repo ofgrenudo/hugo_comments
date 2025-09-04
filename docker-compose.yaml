@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
+    container_name: comments_db
     restart: always
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -8,15 +9,32 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
     env_file: ".env"
     volumes:
-      - db_data:/var/lib/postgresql/data # Persist data
+      - db_data:/var/lib/postgresql/data # persist data
+    healthcheck:                # 👈 Add this
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
-      - "${DB_PORT}:5432"
+      # disable this if you dont want to be able to access it outside of the container network.
+      - "${DB_PORT}:5432" 
 
   app:
     build:  .
+    container_name: comments_app
     env_file: ".env"
-    depends_on:
-      - db
+    environment:
+      DB_HOST: db # note this must match the name of the container
+    depends_on: 
+      db:
+        condition: service_healthy
+    ports:
+      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${APPLICATION_PORT}/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   db_data:
