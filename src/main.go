@@ -4,15 +4,49 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	conn, err := GetConn()
-	if err != nil {
-		log.Fatalf("Unable to connect to the database. Please confirm the database connection paramaters %s.", err)
+	// https://gin-gonic.com/en/docs/examples/grouping-routes/``
+	router := gin.Default()
+	port := os.Getenv("APPLICATION_PORT")
+	if port == "" {
+		port = "8080"
 	}
 
-	defer conn.Close(context.Background())
+	// Generate Routes
+	{
+		v1 := router.Group("/api/v1")
+		v1.GET("/health", ok_status)
+	}
 
-	fmt.Println("Successfully connected to the database.")
+	// Initialize database
+	check_comments_database()
+	NewComment("ofgrenudo", "this is from a function", "loserville", "https://uhhhh")
+	router.Run(":" + port)
+}
+
+func ok_status(c *gin.Context) {
+	c.String(http.StatusOK, "200 OK")
+}
+
+func check_comments_database() {
+	ctx := context.Background()
+
+	conn, err := GetConn()
+	if err != nil {
+		log.Fatalf("DB connection error: %v", err)
+	}
+	defer conn.Close(ctx)
+
+	if err := EnsureCommentsTable(ctx, conn); err != nil {
+		log.Fatalf("Error ensuring table: %v", err)
+	}
+
+	fmt.Println("comments table is ready")
+
 }

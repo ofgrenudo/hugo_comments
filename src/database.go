@@ -46,3 +46,33 @@ func GetConn() (*pgx.Conn, error) {
 
 	return conn, nil
 }
+
+func EnsureCommentsTable(ctx context.Context, conn *pgx.Conn) error {
+
+	createSchema := `
+	CREATE SCHEMA IF NOT EXISTS hugo_comments
+	`
+
+	_, err := conn.Exec(ctx, createSchema)
+	if err != nil {
+		return fmt.Errorf("failed to create hugo_comments schema: %w", err)
+	}
+
+	createTable := `
+	CREATE TABLE IF NOT EXISTS hugo_comments.comments (
+		id SERIAL PRIMARY KEY,
+		user_name TEXT NOT NULL,
+		user_comment TEXT NOT NULL,
+		user_ip TEXT,
+		post_url TEXT NOT NULL,
+		hidden BOOLEAN DEFAULT FALSE
+	);
+	`
+
+	_, err = conn.Exec(ctx, createTable)
+	if err != nil {
+		return fmt.Errorf("failed to create comments table: %w", err)
+	}
+
+	return nil
+}
